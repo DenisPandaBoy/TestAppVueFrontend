@@ -1,9 +1,25 @@
 <script setup lang="ts">
-import axios from 'axios'
+import { useAxios } from '@/axios/axios.ts'
+import { isAuthenticated } from './stores/user.ts'
+import router from '@/router'
+
+const isUserAuthenticated = isAuthenticated()
 function csrfToken() {
-  axios.get('http://localhost:80/sanctum/csrf-cookie')
-  axios.defaults.withCredentials = true
-  axios.defaults.withXSRFToken = true
+  useAxios('/sanctum/csrf-cookie', 'get', {}).then(function (response) {
+    useAxios('api/user', 'get', {})
+      .then(function (responseUser) {
+        isUserAuthenticated.setState(responseUser.status === 200)
+        if (isUserAuthenticated.state) {
+          router.push('/dashboard')
+        } else {
+          router.push('/login')
+        }
+      })
+      .catch(function (error) {
+        isUserAuthenticated.setState(false)
+        router.push('/login')
+      })
+  })
 }
 csrfToken()
 </script>
