@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAxios } from '@/axios/axios.ts'
-import { isAuthenticated } from './stores/user.ts'
+import { isAuthenticated } from '@/stores/isAuthenticated.ts'
 import router from '@/router'
 
 const isUserAuthenticated = isAuthenticated()

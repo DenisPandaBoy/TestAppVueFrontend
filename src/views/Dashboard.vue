@@ -1,5 +1,9 @@
-<script setup lang="ts"></script>
-import { useAxios } from '@/axios/axios.ts'
+<script setup lang="ts">
+import BasicLayout from '@/views/BasicLayout.vue'
+</script>
+
 <template>
-  <div>Dashboard</div>
+  <BasicLayout>
+    <div>Dashboard</div>
+  </BasicLayout>
 </template>

@@ -1,17 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Login from '@/views/Login.vue'
-import { isAuthenticated } from '@/stores/user.ts'
+import { isAuthenticated } from '@/stores/isAuthenticated.ts'
+import Profile from '@/views/Profile.vue'
+import { useAxios } from '@/axios/axios.ts'
+import { CheckIfUserIsLoggedIn } from '@/services/AuthService.ts'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView,
-    },
     {
       path: '/Dashboard',
       name: 'dashboard',
@@ -22,12 +19,19 @@ const router = createRouter({
       name: 'login',
       component: Login,
     },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Profile,
+    },
   ],
 })
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
+  await CheckIfUserIsLoggedIn()
   const isUserAuthenticated = isAuthenticated()
 
+  useAxios('api/user', 'get', {})
   if (to.name === 'Login' && isUserAuthenticated.state) {
     router.push('/Dashboard')
   }
