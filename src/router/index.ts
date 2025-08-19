@@ -5,6 +5,7 @@ import { isAuthenticated } from '@/stores/isAuthenticated.ts'
 import Profile from '@/views/Profile.vue'
 import { useAxios } from '@/axios/axios.ts'
 import { CheckIfUserIsLoggedIn } from '@/services/AuthService.ts'
+import PasswordChange from '@/views/PasswordChange.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +24,11 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: Profile,
+    },
+    {
+      path: '/profile/change-password',
+      name: 'change-password',
+      component: PasswordChange,
     },
   ],
 })
