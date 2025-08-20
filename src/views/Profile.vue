@@ -34,9 +34,9 @@ function onFormSubmit() {
       },
     })
     .then((response) => {
-      if (response.value === undefined) return
-      initialValues.value.name = response.value.data.name
-      initialValues.value.lastName = response.value.data.last_name
+      if (response.data === undefined) return
+      initialValues.value.name = response.data.name
+      initialValues.value.lastName = response.data.last_name
     })
 }
 

@@ -7,6 +7,7 @@ import { useAxios } from '@/components/axios.ts'
 import router from '@/router'
 import { authStore } from '@/stores/auth.ts'
 
+const auth = authStore()
 const logout = (): void => {
   const logOutRequest = useAxios()
   logOutRequest
@@ -25,25 +26,18 @@ const tieredItems = ref([
   { icon: 'pi pi-id-card', label: 'Profile', command: redirectToUserProfile },
   { icon: 'pi pi-power-off', label: 'Logout', command: logout },
 ])
-const firstLetter = ref('')
+
 const menu = ref()
 const toggle = (event: MouseEvent): void => {
   menu.value.toggle(event)
 }
-
-const userFirstLetter = (): string => {
-  const auth = authStore()
-  return auth.user.name[0]
-}
-
-firstLetter.value = userFirstLetter()
 </script>
 
 <template>
   <div class="flex flex-row justify-between">
     <MegaMenu :model="items" />
     <Avatar
-      :label="firstLetter"
+      :label="auth.firstLetter"
       class="mr-2"
       size="xlarge"
       shape="circle"

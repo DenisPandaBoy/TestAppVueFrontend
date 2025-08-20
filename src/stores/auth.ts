@@ -1,9 +1,12 @@
 import { defineStore } from 'pinia'
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import type { User } from '@/types/User.ts'
 
 export const authStore = defineStore('authStore', () => {
   const isAuthenticated = ref(false)
+  const firstLetter = computed(() => {
+    return user.name[0]
+  })
   const user = reactive<User>({
     id: 0,
     name: '',
@@ -22,6 +25,7 @@ export const authStore = defineStore('authStore', () => {
 
   return {
     user,
+    firstLetter,
     setName,
     setId,
     setLastName,

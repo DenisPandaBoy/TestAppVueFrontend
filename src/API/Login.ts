@@ -7,7 +7,7 @@ export const login = (email: string, password: string) => {
 
   return getCsrfCookie()
     .then(() => {
-      loginRequest
+      return loginRequest
         .request({
           method: 'POST',
           url: '/login',
@@ -20,6 +20,9 @@ export const login = (email: string, password: string) => {
           if (res.status === 200) {
             router.push('dashboard')
           }
+        })
+        .catch((err) => {
+          throw err
         })
     })
     .catch((err) => {

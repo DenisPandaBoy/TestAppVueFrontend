@@ -1,4 +1,4 @@
-import axios, { type AxiosRequestConfig } from 'axios'
+import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios'
 import { ref } from 'vue'
 import { authStore } from '@/stores/auth.ts'
 import { useRoute } from 'vue-router'
@@ -7,7 +7,9 @@ export const useAxios = () => {
   const auth = authStore()
   const loading = ref(false)
 
-  const request: (config: AxiosRequestConfig) => Promise<any> = async (config) => {
+  const request: (config: AxiosRequestConfig) => Promise<AxiosResponse<any, any>> = async (
+    config,
+  ) => {
     loading.value = true
 
     return axios({
@@ -16,15 +18,11 @@ export const useAxios = () => {
       withXSRFToken: true,
       ...config,
     })
-      .then((res) => {
-        return res
-      })
       .catch((err) => {
         const route = useRoute()
         if (err.response?.status === 401) {
           if (route.name === 'login') {
             auth.setIsAuthenticated(false)
-            return
           }
         }
 
