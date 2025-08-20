@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import InputText from 'primevue/inputtext'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { Form } from '@primevue/forms'
 import BasicLayout from '@/views/BasicLayout.vue'
 import IftaLabel from 'primevue/iftalabel'
-import { useAxios } from '@/axios/axios.ts'
+import { useAxios } from '@/components/axios.ts'
 import Button from 'primevue/button'
-import { userStore } from '@/stores/userStore.ts'
 import router from '@/router'
+import { authStore } from '@/stores/auth.ts'
+import { getUser } from '@/API/GetUser.ts'
 
-const name = ref<string>()
-const lastName = ref<string>()
+const formData = reactive({
+  name: '',
+  lastName: '',
+})
 const noChangesToSubmit = ref(true)
 
 const initialValues = ref({
@@ -18,32 +21,40 @@ const initialValues = ref({
   lastName: '',
 })
 
-useAxios('api/user', 'get', {}).then((response) => {
-  initialValues.value.name = response.data.name
-  initialValues.value.lastName = response.data.last_name
-  name.value = response.data.name
-  lastName.value = response.data.last_name
-})
-
 function onFormSubmit() {
-  const user = userStore()
-  useAxios('api/users/' + user.id, 'patch', {
-    name: name.value,
-    last_name: lastName.value,
-  }).then((response) => {
-    initialValues.value.name = response.data.name
-    initialValues.value.lastName = response.data.last_name
-  })
+  const auth = authStore()
+  const axios = useAxios()
+  axios
+    .request({
+      method: 'patch',
+      url: 'api/users/' + auth.user.id,
+      data: {
+        name: formData.name,
+        last_name: formData.lastName,
+      },
+    })
+    .then((response) => {
+      if (response.value === undefined) return
+      initialValues.value.name = response.value.data.name
+      initialValues.value.lastName = response.value.data.last_name
+    })
 }
 
 function valueChanged(): void {
   noChangesToSubmit.value =
-    initialValues.value.name === name.value && initialValues.value.lastName === lastName.value
+    initialValues.value.name === formData.name && initialValues.value.lastName === formData.lastName
 }
 
 function onChangePassword(): void {
   router.push('/profile/change-password')
 }
+
+getUser().then((res) => {
+  initialValues.value.name = res.data.name
+  initialValues.value.lastName = res.data.last_name
+  formData.name = res.data.name
+  formData.lastName = res.data.last_name
+})
 </script>
 
 <template>
@@ -59,9 +70,9 @@ function onChangePassword(): void {
             id="name"
             name="name"
             type="text"
-            v-model="name"
+            v-model="formData.name"
             @valueChange="valueChanged"
-            :placeholder="name"
+            :placeholder="formData.name"
           />
           <label for="name">Name</label>
         </IftaLabel>
@@ -70,9 +81,9 @@ function onChangePassword(): void {
             id="lastName"
             name="lastName"
             type="text"
-            v-model="lastName"
+            v-model="formData.lastName"
             @valueChange="valueChanged"
-            :placeholder="lastName"
+            :placeholder="formData.lastName"
           />
           <label for="lastName">Last Name</label>
         </IftaLabel>

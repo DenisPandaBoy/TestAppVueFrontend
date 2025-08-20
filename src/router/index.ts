@@ -1,19 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '@/views/Dashboard.vue'
 import Login from '@/views/Login.vue'
-import { isAuthenticated } from '@/stores/isAuthenticated.ts'
 import Profile from '@/views/Profile.vue'
-import { useAxios } from '@/axios/axios.ts'
-import { CheckIfUserIsLoggedIn } from '@/services/AuthService.ts'
 import PasswordChange from '@/views/PasswordChange.vue'
+import { useAuth } from '@/components/AuthComposable.ts'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/Dashboard',
+      path: '/dashboard',
       name: 'dashboard',
       component: Dashboard,
+      meta: { auth: true },
     },
     {
       path: '/login',
@@ -24,22 +23,36 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: Profile,
+      meta: { auth: true },
     },
     {
       path: '/profile/change-password',
       name: 'change-password',
       component: PasswordChange,
+      meta: { auth: true },
     },
   ],
 })
 
 router.beforeEach(async (to) => {
-  await CheckIfUserIsLoggedIn()
-  const isUserAuthenticated = isAuthenticated()
+  if (to.meta.auth) {
+    const auth = useAuth()
+    console.log(to.name)
+    auth
+      .checkAuth()
+      .then((isAuthenticated) => {
+        if (to.name !== 'login' && !isAuthenticated) {
+          router.push('login')
+          return
+        }
 
-  useAxios('api/user', 'get', {})
-  if (to.name === 'Login' && isUserAuthenticated.state) {
-    router.push('/Dashboard')
+        if (to.name === 'login' && isAuthenticated) {
+          router.push('dashboard')
+        }
+      })
+      .catch((errs) => {
+        router.push('login')
+      })
   }
 })
 

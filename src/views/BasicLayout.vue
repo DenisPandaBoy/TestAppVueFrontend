@@ -3,12 +3,18 @@ import MegaMenu from 'primevue/megamenu'
 import { ref } from 'vue'
 import Avatar from 'primevue/avatar'
 import TieredMenu from 'primevue/tieredmenu'
-import { useAxios } from '@/axios/axios.ts'
+import { useAxios } from '@/components/axios.ts'
 import router from '@/router'
-import { userStore } from '@/stores/userStore.ts'
+import { authStore } from '@/stores/auth.ts'
 
 const logout = (): void => {
-  useAxios('logout', 'post', {}).then(() => router.push('/login'))
+  const logOutRequest = useAxios()
+  logOutRequest
+    .request({
+      method: 'POST',
+      url: 'logout',
+    })
+    .then(() => router.push('/login'))
 }
 const redirectToUserProfile = (): void => {
   router.push('/profile')
@@ -26,8 +32,8 @@ const toggle = (event: MouseEvent): void => {
 }
 
 const userFirstLetter = (): string => {
-  const user = userStore()
-  return user.name[0]
+  const auth = authStore()
+  return auth.user.name[0]
 }
 
 firstLetter.value = userFirstLetter()

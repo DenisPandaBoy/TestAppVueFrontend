@@ -5,17 +5,23 @@ import Button from 'primevue/button'
 import { Form } from '@primevue/forms'
 import { ref } from 'vue'
 import Password from 'primevue/password'
-import { useAxios } from '@/axios/axios.ts'
+import { useAxios } from '@/components/axios.ts'
 
 const oldPassword = ref('')
 const newPassword = ref('')
 const newPasswordConfirmation = ref('')
 
 function onFormSubmit(): void {
-  useAxios('/api/user/update-password', 'post', {
-    old_password: oldPassword.value,
-    new_password: newPassword.value,
-    new_password_confirmation: newPasswordConfirmation.value,
+  const axios = useAxios()
+
+  axios.request({
+    url: '/api/user/update-password',
+    method: 'post',
+    data: {
+      old_password: oldPassword.value,
+      new_password: newPassword.value,
+      new_password_confirmation: newPasswordConfirmation.value,
+    },
   })
 }
 </script>
