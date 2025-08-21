@@ -15,22 +15,20 @@ export const authStore = defineStore('authStore', () => {
     isAdmin: false,
   })
 
-  const setName = (name: string) => (user.name = name)
-  const setId = (id: number) => (user.id = id)
-  const setLastName = (lastName: string) => (user.lastName = lastName)
-  const setEmail = (email: string) => (user.email = email)
-  const setIsAdmin = (isAdmin: boolean) => (user.isAdmin = isAdmin)
+  const setUser = (user: User) => {
+    user.id = user.id
+    user.name = user.name
+    user.email = user.email
+    user.isAdmin = user.isAdmin
+    user.lastName = user.lastName
+  }
   const setIsAuthenticated = (isAuthenticatedInput: boolean) =>
     (isAuthenticated.value = isAuthenticatedInput)
 
   return {
     user,
     firstLetter,
-    setName,
-    setId,
-    setLastName,
-    setEmail,
-    setIsAdmin,
+    setUser,
     isAuthenticated,
     setIsAuthenticated,
   }

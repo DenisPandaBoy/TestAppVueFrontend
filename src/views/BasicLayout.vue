@@ -3,19 +3,17 @@ import MegaMenu from 'primevue/megamenu'
 import { ref } from 'vue'
 import Avatar from 'primevue/avatar'
 import TieredMenu from 'primevue/tieredmenu'
-import { useAxios } from '@/components/axios.ts'
+import { useAxios } from '@/Composables/axios.ts'
 import router from '@/router'
 import { authStore } from '@/stores/auth.ts'
 
 const auth = authStore()
+const { execAxios } = useAxios()
 const logout = (): void => {
-  const logOutRequest = useAxios()
-  logOutRequest
-    .request({
-      method: 'POST',
-      url: 'logout',
-    })
-    .then(() => router.push('/login'))
+  execAxios({
+    method: 'POST',
+    url: 'logout',
+  }).then(() => router.push('/login'))
 }
 const redirectToUserProfile = (): void => {
   router.push('/profile')

@@ -7,7 +7,7 @@ export const useAxios = () => {
   const auth = authStore()
   const loading = ref(false)
 
-  const request: (config: AxiosRequestConfig) => Promise<AxiosResponse<any, any>> = async (
+  const execAxios: (config: AxiosRequestConfig) => Promise<AxiosResponse<any, any>> = async (
     config,
   ) => {
     loading.value = true
@@ -33,5 +33,5 @@ export const useAxios = () => {
       })
   }
 
-  return { loading, request }
+  return { loading, execAxios }
 }

@@ -4,11 +4,11 @@ import { reactive, ref } from 'vue'
 import { Form } from '@primevue/forms'
 import BasicLayout from '@/views/BasicLayout.vue'
 import IftaLabel from 'primevue/iftalabel'
-import { useAxios } from '@/components/axios.ts'
+import { useAxios } from '@/Composables/axios.ts'
 import Button from 'primevue/button'
 import router from '@/router'
 import { authStore } from '@/stores/auth.ts'
-import { getUser } from '@/API/GetUser.ts'
+import { useAuth } from '@/API/Auth.ts'
 
 const formData = reactive({
   name: '',
@@ -20,32 +20,31 @@ const initialValues = ref({
   name: '',
   lastName: '',
 })
+const { execAxios } = useAxios()
+const { getUser } = useAuth()
 
-function onFormSubmit() {
+const onFormSubmit = () => {
   const auth = authStore()
-  const axios = useAxios()
-  axios
-    .request({
-      method: 'patch',
-      url: 'api/users/' + auth.user.id,
-      data: {
-        name: formData.name,
-        last_name: formData.lastName,
-      },
-    })
-    .then((response) => {
-      if (response.data === undefined) return
-      initialValues.value.name = response.data.name
-      initialValues.value.lastName = response.data.last_name
-    })
+  execAxios({
+    method: 'patch',
+    url: 'api/users/' + auth.user.id,
+    data: {
+      name: formData.name,
+      last_name: formData.lastName,
+    },
+  }).then((response) => {
+    if (response.data === undefined) return
+    initialValues.value.name = response.data.name
+    initialValues.value.lastName = response.data.last_name
+  })
 }
 
-function valueChanged(): void {
+const valueChanged = () => {
   noChangesToSubmit.value =
     initialValues.value.name === formData.name && initialValues.value.lastName === formData.lastName
 }
 
-function onChangePassword(): void {
+const onChangePassword = () => {
   router.push('/profile/change-password')
 }
 
