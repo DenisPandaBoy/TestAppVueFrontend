@@ -18,7 +18,7 @@ export const login = (email: string, password: string) => {
         })
         .then((res) => {
           if (res.status === 200) {
-            router.push('dashboard')
+            router.push('/')
           }
         })
         .catch((err) => {

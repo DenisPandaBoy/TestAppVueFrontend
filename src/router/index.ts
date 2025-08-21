@@ -9,7 +9,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/dashboard',
+      path: '/',
       name: 'dashboard',
       component: Dashboard,
       meta: { auth: true },
@@ -47,7 +47,7 @@ router.beforeEach(async (to) => {
         }
 
         if (to.name === 'login' && isAuthenticated) {
-          router.push('dashboard')
+          router.push('/')
         }
       })
       .catch((errs) => {
