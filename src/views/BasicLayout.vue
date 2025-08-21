@@ -19,7 +19,18 @@ const redirectToUserProfile = (): void => {
   router.push('/profile')
 }
 
-const items = ref([{ icon: 'pi pi-home', label: 'Home' }, { label: 'Test2' }])
+const redirectToDashBoard = (): void => {
+  router.push('/')
+}
+
+const redirectToOrders = (): void => {
+  router.push('/orders')
+}
+
+const items = ref([
+  { icon: 'pi pi-home', label: 'Home', command: redirectToDashBoard },
+  { icon: 'pi pi-shopping-bag', label: 'Orders', command: redirectToOrders },
+])
 const tieredItems = ref([
   { icon: 'pi pi-id-card', label: 'Profile', command: redirectToUserProfile },
   { icon: 'pi pi-power-off', label: 'Logout', command: logout },

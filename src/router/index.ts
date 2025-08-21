@@ -4,6 +4,7 @@ import Login from '@/views/Login.vue'
 import Profile from '@/views/Profile.vue'
 import PasswordChange from '@/views/PasswordChange.vue'
 import { useAuth } from '@/API/Auth.ts'
+import OrdersView from '@/views/OrdersView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,11 @@ const router = createRouter({
       path: '/profile/change-password',
       name: 'change-password',
       component: PasswordChange,
+    },
+    {
+      path: '/orders',
+      name: 'orders',
+      component: OrdersView,
     },
   ],
 })
