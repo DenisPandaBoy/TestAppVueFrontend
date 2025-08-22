@@ -9,5 +9,12 @@ export const useOrders = () => {
     })
   }
 
-  return { getUsersOrders }
+  const getOrder = (id: number) => {
+    return execAxios({
+      method: 'GET',
+      url: `/api/orders/${id}`,
+    })
+  }
+
+  return { getUsersOrders, getOrder }
 }
