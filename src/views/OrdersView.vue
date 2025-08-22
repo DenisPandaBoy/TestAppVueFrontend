@@ -16,7 +16,7 @@ import Select from 'primevue/select'
 import DatePicker from 'primevue/datepicker'
 import { useDateFormatter } from '@/Composables/DateFormatter.ts'
 
-const { getUsersOrders, createOrder } = useOrders()
+const { getUsersOrders, createOrder, deleteOrder } = useOrders()
 const { getCategories } = useCategories()
 const { formatDateForBackend } = useDateFormatter()
 const products = ref<Order[]>([])
@@ -61,6 +61,26 @@ const createOrderSubmit = () => {
   }).then(loadData)
   createOrderDialogVisible.value = false
 }
+
+const deleteOrderConfirm = (data) => {
+  console.log(data)
+  confirm.require({
+    message: `Are you sure you want to delete ${data.order_number} item?`,
+    header: 'Confirmation',
+    icon: 'pi pi-exclamation-triangle',
+    acceptProps: {
+      label: 'Delete',
+      severity: 'danger',
+    },
+    rejectProps: {
+      label: 'Cancel',
+      type: 'secondary',
+    },
+    accept: () => {
+      deleteOrder(data.id).then(loadData)
+    },
+  })
+}
 </script>
 
 <template>
@@ -82,7 +102,11 @@ const createOrderSubmit = () => {
       <Column field="payment_date" header="Payment Date"></Column>
       <Column class="w-24" header="Actions">
         <template #body="{ data }">
-          <Button icon="pi pi-search" @click="selectRow(data)" severity="secondary"></Button>
+          <div class="flex flex-row gap-2">
+            <Button icon="pi pi-search" @click="selectRow(data)" severity="secondary"></Button>
+            <Button icon="pi pi-pencil" @click="selectRow(data)" severity="info"></Button>
+            <Button icon="pi pi-trash" @click="deleteOrderConfirm(data)" severity="danger"></Button>
+          </div>
         </template>
       </Column>
     </DataTable>
