@@ -16,7 +16,7 @@ import Select from 'primevue/select'
 import DatePicker from 'primevue/datepicker'
 import { useDateFormatter } from '@/Composables/DateFormatter.ts'
 
-const { getUsersOrders, createOrder, deleteOrder } = useOrders()
+const { getUsersOrders, createOrder, deleteOrder, editOrder } = useOrders()
 const { getCategories } = useCategories()
 const { formatDateForBackend } = useDateFormatter()
 const products = ref<Order[]>([])
@@ -26,6 +26,13 @@ const editOrderDialogVisible = ref(false)
 const createOrderDialogVisible = ref(false)
 
 const createFormData = reactive({
+  category: {},
+  due_date: {},
+  payment_date: {},
+})
+
+const editFormData = reactive({
+  id: 0,
   category: {},
   due_date: {},
   payment_date: {},
@@ -50,7 +57,6 @@ const getCategory = (id: number) => {
 }
 const selectRow = (row: Order) => {
   router.push('/orders/' + row.id)
-  console.log(row)
 }
 
 const createOrderSubmit = () => {
@@ -81,6 +87,23 @@ const deleteOrderConfirm = (data) => {
     },
   })
 }
+
+const showEditDialog = (data) => {
+  editFormData.id = data.id
+  editFormData.category = categories.value.find((c) => c.id == data.category_id) ?? {}
+  editFormData.due_date = new Date(data.due_date)
+  editFormData.payment_date = new Date(data.payment_date)
+  editOrderDialogVisible.value = true
+}
+
+const confirmEditOrder = () => {
+  editOrder(editFormData.id, {
+    category_id: editFormData.category.id,
+    due_date: formatDateForBackend(editFormData.due_date),
+    payment_date: formatDateForBackend(editFormData.payment_date),
+  }).then(loadData)
+  editOrderDialogVisible.value = false
+}
 </script>
 
 <template>
@@ -104,7 +127,7 @@ const deleteOrderConfirm = (data) => {
         <template #body="{ data }">
           <div class="flex flex-row gap-2">
             <Button icon="pi pi-search" @click="selectRow(data)" severity="secondary"></Button>
-            <Button icon="pi pi-pencil" @click="selectRow(data)" severity="info"></Button>
+            <Button icon="pi pi-pencil" @click="showEditDialog(data)" severity="info"></Button>
             <Button icon="pi pi-trash" @click="deleteOrderConfirm(data)" severity="danger"></Button>
           </div>
         </template>
@@ -148,6 +171,45 @@ const deleteOrderConfirm = (data) => {
           @click="createOrderDialogVisible = false"
         ></Button>
         <Button type="button" label="Save" @click="createOrderSubmit"></Button>
+      </div>
+    </Dialog>
+    <Dialog
+      v-model:visible="editOrderDialogVisible"
+      modal
+      header="Edit Profile"
+      position="left"
+      :style="{ width: '25rem' }"
+    >
+      <span class="text-surface-500 dark:text-surface-400 block mb-8"
+        >Update your information.</span
+      >
+      <div class="card flex justify-center">
+        <label for="category" class="font-semibold w-24">Category</label>
+        <Select
+          id="category"
+          v-model="editFormData.category"
+          :options="categories"
+          optionLabel="name"
+          placeholder="Select a Category"
+          class="w-full md:w-56"
+        />
+      </div>
+      <div class="card flex justify-center">
+        <label for="due_date" class="font-semibold w-24">Due date</label>
+        <DatePicker v-model="editFormData.due_date" id="due_date" />
+      </div>
+      <div class="card flex justify-center">
+        <label for="payment_date" class="font-semibold w-24">Payment Date</label>
+        <DatePicker v-model="editFormData.payment_date" id="payment_date" />
+      </div>
+      <div class="flex justify-end gap-2">
+        <Button
+          type="button"
+          label="Cancel"
+          severity="secondary"
+          @click="editOrderDialogVisible = false"
+        ></Button>
+        <Button type="button" label="Save" @click="confirmEditOrder"></Button>
       </div>
     </Dialog>
   </BasicLayout>
