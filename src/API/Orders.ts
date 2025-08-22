@@ -16,5 +16,28 @@ export const useOrders = () => {
     })
   }
 
-  return { getUsersOrders, getOrder }
+  const createOrder = (data: any) => {
+    return execAxios({
+      method: 'POST',
+      url: '/api/orders',
+      data: data,
+    })
+  }
+
+  const editOrder = (id: number, data: any) => {
+    return execAxios({
+      method: 'PATCH',
+      url: `/api/orders/${id}`,
+      data: data,
+    })
+  }
+
+  const deleteOrder = (id: number) => {
+    return execAxios({
+      method: 'DELETE',
+      url: `/api/orders/${id}`,
+    })
+  }
+
+  return { getUsersOrders, getOrder, createOrder, editOrder, deleteOrder }
 }

@@ -26,7 +26,7 @@ export const useOrderItems = () => {
     })
   }
 
-  const updateOrderItem = (id: number, data) => {
+  const updateOrderItem = (id: number, data: any) => {
     return execAxios({
       method: 'PATCH',
       url: `/api/order-items/${id}`,
