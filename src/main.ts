@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 import '@/assets/style.css'
+import ConfirmationService from 'primevue/confirmationservice'
 
 import App from './App.vue'
 import router from './router'
@@ -16,5 +17,6 @@ app.use(PrimeVue, {
   },
 })
 app.use(router)
+app.use(ConfirmationService)
 
 app.mount('#app')
