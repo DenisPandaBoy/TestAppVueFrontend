@@ -7,6 +7,7 @@ import { useAuth } from '@/API/Auth.ts'
 import OrdersView from '@/views/OrdersView.vue'
 import OrderView from '@/views/OrderView.vue'
 import CategoriesView from '@/views/CategoriesView.vue'
+import UsersView from '@/views/UsersView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +46,11 @@ const router = createRouter({
       path: '/categories',
       name: 'categories',
       component: CategoriesView,
+    },
+    {
+      path: '/users',
+      name: 'users',
+      component: UsersView,
     },
   ],
 })

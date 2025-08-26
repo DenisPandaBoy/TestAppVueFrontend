@@ -10,7 +10,7 @@ export const useCategories = () => {
     })
   }
 
-  const createCategory = (data) => {
+  const createCategory = (data: any) => {
     return execAxios({
       method: 'POST',
       url: '/api/categories',
@@ -18,7 +18,7 @@ export const useCategories = () => {
     })
   }
 
-  const updateCategory = (id: number, data) => {
+  const updateCategory = (id: number, data: any) => {
     return execAxios({
       method: 'PATCH',
       url: `/api/categories/${id}`,
