@@ -14,11 +14,10 @@ import Dialog from 'primevue/dialog'
 import ConfirmDialog from 'primevue/confirmdialog'
 import Select from 'primevue/select'
 import DatePicker from 'primevue/datepicker'
-import { useDateFormatter } from '@/Composables/DateFormatter.ts'
+import { formatDateForBackend } from '@/helpers/date.ts'
 
 const { getUsersOrders, createOrder, deleteOrder, editOrder } = useOrders()
 const { getCategories } = useCategories()
-const { formatDateForBackend } = useDateFormatter()
 const products = ref<Order[]>([])
 const categories = ref<Category[]>([])
 const confirm = useConfirm()
@@ -69,7 +68,6 @@ const createOrderSubmit = () => {
 }
 
 const deleteOrderConfirm = (data) => {
-  console.log(data)
   confirm.require({
     message: `Are you sure you want to delete ${data.order_number} item?`,
     header: 'Confirmation',
