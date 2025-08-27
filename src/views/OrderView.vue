@@ -12,7 +12,7 @@ import { useOrderItems } from '@/API/OrderItems.ts'
 import ConfirmDialog from 'primevue/confirmdialog'
 import { useConfirm } from 'primevue/useconfirm'
 import type { OrderItem } from '@/types/OrderItem.ts'
-import { useDateFormatter } from '@/helpers/date.ts'
+import { preloaderStore } from '@/stores/preloader.ts'
 
 const { getOrderItems, deleteOrderItem, createOrderItem, updateOrderItem } = useOrderItems()
 const orderItems = ref([])
@@ -20,6 +20,7 @@ const confirm = useConfirm()
 const editOrderItemDialogVisible = ref(false)
 const createOrderItemDialogVisible = ref(false)
 const route = useRoute()
+const { setLoaded } = preloaderStore()
 
 const createFormData = reactive<OrderItem>({
   id: 0,
@@ -41,6 +42,7 @@ const editFormData = reactive({
 
 onMounted(() => {
   fetchData()
+  setLoaded(true)
 })
 
 const fetchData = () => {

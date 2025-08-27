@@ -15,6 +15,7 @@ import ConfirmDialog from 'primevue/confirmdialog'
 import Select from 'primevue/select'
 import DatePicker from 'primevue/datepicker'
 import { formatDateForBackend } from '@/helpers/date.ts'
+import { preloaderStore } from '@/stores/preloader.ts'
 
 const { getUsersOrders, createOrder, deleteOrder, editOrder, getOrderStatusHistory } = useOrders()
 const { getCategories } = useCategories()
@@ -25,6 +26,7 @@ const confirm = useConfirm()
 const editOrderDialogVisible = ref(false)
 const createOrderDialogVisible = ref(false)
 const orderStatusHistoryDialogVisible = ref(false)
+const { setLoaded } = preloaderStore()
 
 const createFormData = reactive({
   category: {},
@@ -45,6 +47,7 @@ onMounted(() => {
   getCategories().then((res) => {
     categories.value = res.data.data
   })
+  setLoaded(true)
 })
 
 const loadData = () => {

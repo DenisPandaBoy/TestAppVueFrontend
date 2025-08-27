@@ -6,8 +6,10 @@ import Password from 'primevue/password'
 import { reactive } from 'vue'
 import type { AxiosError } from 'axios'
 import { useAuth } from '@/API/Auth.ts'
+import { preloaderStore } from '@/stores/preloader.ts'
 
 const { login } = useAuth()
+const { setLoaded } = preloaderStore()
 const formData = reactive({
   email: '',
   password: '',
@@ -18,6 +20,7 @@ const formData = reactive({
 })
 
 const onFormSubmit = () => {
+  setLoaded(false)
   login(formData.email, formData.password).catch((error: AxiosError) => {
     if (error.response.data.errors.email) {
       formData.emailInvalid = true

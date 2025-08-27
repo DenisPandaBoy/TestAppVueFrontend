@@ -4,16 +4,26 @@ import { ref } from 'vue'
 import Avatar from 'primevue/avatar'
 import TieredMenu from 'primevue/tieredmenu'
 import { useAxios } from '@/Composables/axios.ts'
-import router from '@/router'
 import { authStore } from '@/stores/auth.ts'
+import ProgressSpinner from 'primevue/progressspinner'
+import { preloaderStore } from '@/stores/preloader.ts'
+import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 
 const auth = authStore()
+const preloader = preloaderStore()
+const router = useRouter()
+const { loaded } = storeToRefs(preloader)
 const { execAxios } = useAxios()
+
 const logout = (): void => {
   execAxios({
     method: 'POST',
     url: 'logout',
-  }).then(() => router.push('/login'))
+  }).then(() => {
+    auth.setIsAuthenticated(false)
+    router.push('/login')
+  })
 }
 const redirectToUserProfile = (): void => {
   router.push('/profile')
@@ -66,5 +76,9 @@ const toggle = (event: MouseEvent): void => {
     />
   </div>
   <TieredMenu ref="menu" id="overlay_tmenu" :model="tieredItems" popup />
-  <slot />
+  <div class="fixed h-screen w-screen bg-black" v-if="!loaded">
+    <ProgressSpinner class="mx-auto !w-full" />
+  </div>
+
+  <slot v-if="loaded" />
 </template>
