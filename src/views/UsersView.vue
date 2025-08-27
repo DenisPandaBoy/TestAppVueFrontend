@@ -12,11 +12,13 @@ import InputText from 'primevue/inputtext'
 import Dialog from 'primevue/dialog'
 import ToggleSwitch from 'primevue/toggleswitch'
 import Password from 'primevue/password'
+import { preloaderStore } from '@/stores/preloader.ts'
 
 const users = ref<User[]>([])
 const createUserDialogVisible = ref<boolean>(false)
 const { getUsers, deleteUser, createUser } = useUsers()
 const confirm = useConfirm()
+const { setLoaded } = preloaderStore()
 
 const createUserForm = ref({
   name: '',
@@ -66,6 +68,7 @@ const loadData = () => {
 
 onMounted(() => {
   loadData()
+  setLoaded(true)
 })
 </script>
 

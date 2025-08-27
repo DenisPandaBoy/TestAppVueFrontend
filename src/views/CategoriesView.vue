@@ -11,6 +11,7 @@ import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import { useConfirm } from 'primevue/useconfirm'
 import { authStore } from '@/stores/auth.ts'
+import { preloaderStore } from '@/stores/preloader.ts'
 
 const categories = ref<Category[]>([])
 const createCategoryDialogVisible = ref<boolean>(false)
@@ -18,6 +19,7 @@ const updateCategoryDialogVisible = ref<boolean>(false)
 const { getCategories, deleteCategory, updateCategory, createCategory } = useCategories()
 const confirm = useConfirm()
 const auth = authStore()
+const { setLoaded } = preloaderStore()
 const createFormData = ref({
   name: '',
 })
@@ -64,11 +66,11 @@ const updateCategorySubmit = () => {
 }
 
 onMounted(() => {
-  loadData()
+  loadData().then(() => setLoaded(true))
 })
 
 const loadData = () => {
-  getCategories().then((res) => {
+  return getCategories().then((res) => {
     categories.value = res.data.data
   })
 }

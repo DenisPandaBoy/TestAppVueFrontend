@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import InputText from 'primevue/inputtext'
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { Form } from '@primevue/forms'
 import BasicLayout from '@/views/BasicLayout.vue'
 import IftaLabel from 'primevue/iftalabel'
@@ -9,7 +9,9 @@ import Button from 'primevue/button'
 import router from '@/router'
 import { authStore } from '@/stores/auth.ts'
 import { useAuth } from '@/API/Auth.ts'
+import { preloaderStore } from '@/stores/preloader.ts'
 
+const { setLoaded } = preloaderStore()
 const formData = reactive({
   name: '',
   lastName: '',
@@ -53,6 +55,10 @@ getUser().then((res) => {
   initialValues.value.lastName = res.data.last_name
   formData.name = res.data.name
   formData.lastName = res.data.last_name
+})
+
+onMounted(() => {
+  setLoaded(true)
 })
 </script>
 
