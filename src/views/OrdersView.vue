@@ -16,13 +16,15 @@ import Select from 'primevue/select'
 import DatePicker from 'primevue/datepicker'
 import { formatDateForBackend } from '@/helpers/date.ts'
 
-const { getUsersOrders, createOrder, deleteOrder, editOrder } = useOrders()
+const { getUsersOrders, createOrder, deleteOrder, editOrder, getOrderStatusHistory } = useOrders()
 const { getCategories } = useCategories()
 const products = ref<Order[]>([])
 const categories = ref<Category[]>([])
+const statuses = ref([])
 const confirm = useConfirm()
 const editOrderDialogVisible = ref(false)
 const createOrderDialogVisible = ref(false)
+const orderStatusHistoryDialogVisible = ref(false)
 
 const createFormData = reactive({
   category: {},
@@ -56,6 +58,13 @@ const getCategory = (id: number) => {
 }
 const selectRow = (row: Order) => {
   router.push('/orders/' + row.id)
+}
+
+const openHistoryStatuses = (data) => {
+  getOrderStatusHistory(Number(data.id)).then((res) => {
+    statuses.value = res.data.data
+    orderStatusHistoryDialogVisible.value = true
+  })
 }
 
 const createOrderSubmit = () => {
@@ -125,6 +134,11 @@ const confirmEditOrder = () => {
         <template #body="{ data }">
           <div class="flex flex-row gap-2">
             <Button icon="pi pi-search" @click="selectRow(data)" severity="secondary"></Button>
+            <Button
+              icon="pi pi-calendar-clock"
+              @click="openHistoryStatuses(data)"
+              severity="secondary"
+            ></Button>
             <Button icon="pi pi-pencil" @click="showEditDialog(data)" severity="info"></Button>
             <Button icon="pi pi-trash" @click="deleteOrderConfirm(data)" severity="danger"></Button>
           </div>
@@ -132,6 +146,30 @@ const confirmEditOrder = () => {
       </Column>
     </DataTable>
     <ConfirmDialog></ConfirmDialog>
+    <Dialog
+      v-model:visible="orderStatusHistoryDialogVisible"
+      modal
+      header="Status History"
+      :style="{ width: 'auto' }"
+      resizableColumns
+      columnResizeMode="expand"
+    >
+      <span class="text-surface-500 dark:text-surface-400 block mb-8">Status log for order</span>
+      <DataTable :value="statuses" tableStyle="min-width: 50rem">
+        <Column field="id" header="ID"></Column>
+        <Column field="status" header="Status"></Column>
+        <Column field="order_id" header="OrderID"></Column>
+        <Column field="created_at" header="Date"></Column>
+      </DataTable>
+      <div class="flex justify-end gap-2">
+        <Button
+          type="button"
+          label="Cancel"
+          severity="secondary"
+          @click="orderStatusHistoryDialogVisible = false"
+        ></Button>
+      </div>
+    </Dialog>
     <Dialog
       v-model:visible="createOrderDialogVisible"
       modal
