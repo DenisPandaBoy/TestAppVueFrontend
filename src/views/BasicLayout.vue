@@ -27,9 +27,19 @@ const redirectToOrders = (): void => {
   router.push('/orders')
 }
 
+const redirectToCategories = (): void => {
+  router.push('/categories')
+}
+
+const redirectToUsers = (): void => {
+  router.push('/users')
+}
+
 const items = ref([
   { icon: 'pi pi-home', label: 'Home', command: redirectToDashBoard },
   { icon: 'pi pi-shopping-bag', label: 'Orders', command: redirectToOrders },
+  { icon: 'pi pi-folder', label: 'Categories', command: redirectToCategories },
+  { icon: 'pi pi-user', label: 'Users', command: redirectToUsers },
 ])
 const tieredItems = ref([
   { icon: 'pi pi-id-card', label: 'Profile', command: redirectToUserProfile },

@@ -7,6 +7,9 @@ export const authStore = defineStore('authStore', () => {
   const firstLetter = computed(() => {
     return user.name[0]
   })
+  const isAdmin = computed<boolean>(() => {
+    return user.isAdmin
+  })
   const user = reactive<User>({
     id: 0,
     name: '',
@@ -28,6 +31,7 @@ export const authStore = defineStore('authStore', () => {
   return {
     user,
     firstLetter,
+    isAdmin,
     setUser,
     isAuthenticated,
     setIsAuthenticated,
