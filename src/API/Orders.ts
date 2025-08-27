@@ -39,5 +39,12 @@ export const useOrders = () => {
     })
   }
 
-  return { getUsersOrders, getOrder, createOrder, editOrder, deleteOrder }
+  const getOrderStatusHistory = (id: number) => {
+    return execAxios({
+      method: 'GET',
+      url: `/api/orders/${id}/statuses`,
+    })
+  }
+
+  return { getUsersOrders, getOrder, createOrder, editOrder, deleteOrder, getOrderStatusHistory }
 }
