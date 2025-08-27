@@ -62,7 +62,6 @@ const selectRow = (row: Order) => {
 
 const openHistoryStatuses = (data) => {
   getOrderStatusHistory(Number(data.id)).then((res) => {
-    console.log(res)
     statuses.value = res.data.data
     orderStatusHistoryDialogVisible.value = true
   })
